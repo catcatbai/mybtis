@@ -26,6 +26,13 @@ public enum ResultSetType {
    *
    * @since 3.5.0
    */
+  /*@baido 参考：https://www.baidu.com/link?url=1IvIBqTbZESBZjaVvRSUfLA0v-h_1IhLe78_HQJGoGgLQhnL5RLgoJaeaEp_3fqtLr91KkWv3T6sOb7m1uIcsPG3IYJs7CWGHO_s4XW4cim&wd=&eqid=d45ad7e50005afcf000000025f96974e
+      TYPE_FORWARD_ONLY 默认的cursor 类型，仅仅支持结果集forward ，不支持backforward ，random ，last ，first 等操作。
+      TYPE_SCROLL_INSENSITIVE 支持结果集backforward ，random ，last ，first 等操作，对其它session 对数据库中数据做出的更改是不敏感的。
+      TYPE_SCROLL_SENSITIVE 支持结果集backforward ，random ，last ，first 等操作，对其它session 对数据库中数据做出的更改是敏感的，
+                            即其他session 修改了数据库中的数据，会反应到本结果集中。
+
+  *   */
   DEFAULT(-1),
   FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
   SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),

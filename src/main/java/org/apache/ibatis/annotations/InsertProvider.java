@@ -50,6 +50,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Repeatable(InsertProvider.List.class)
 public @interface InsertProvider {
+  /*@baido 自己写一个类，然后指定方法，该发方法返回一个 sql*/
 
   /**
    * Specify a type that implements an SQL provider method.

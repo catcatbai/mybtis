@@ -50,6 +50,9 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {
 
+  /*
+  * @baido 命名空间缓存， 不知道在哪里用了？*/
+
   /**
    * Returns the cache implementation type to use.
    *

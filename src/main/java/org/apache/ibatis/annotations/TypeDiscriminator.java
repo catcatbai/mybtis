@@ -53,6 +53,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface TypeDiscriminator {
+  /*@baido 类型鉴别器*/
 
   /**
    * Returns the column name(column label) that hold conditional value.

@@ -42,5 +42,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 public @interface Mapper {
+  /*@baido 指定接口Mapper*/
   // Interface Mapper
 }

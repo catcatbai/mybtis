@@ -33,6 +33,7 @@ import org.apache.ibatis.mapping.FetchType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface Many {
+  /*@baido @Target({}) Target 空，说明不可以作用到任何地方。但是可以当作参数传递 例如：@One*/
   /**
    * Returns the columnPrefix.
    *

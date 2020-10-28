@@ -19,5 +19,6 @@ package org.apache.ibatis.mapping;
  * @author Clinton Begin
  */
 public enum SqlCommandType {
+  /*@baido sql语句的类型 */
   UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH
 }

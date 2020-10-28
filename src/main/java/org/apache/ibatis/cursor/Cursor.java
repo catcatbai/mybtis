@@ -25,17 +25,22 @@ import java.io.Closeable;
  *
  * @author Guillaume Darmont / guillaume@dropinocean.com
  */
+//游标契约使用迭代器惰性地处理抓取项。
+//游标非常适合处理数百万项查询，而这些查询通常无法装入内存。
+//如果在resultMaps中使用集合，则必须使用resultMap的id列对游标SQL查询进行排序(resultOrdered="true")。
 public interface Cursor<T> extends Closeable, Iterable<T> {
 
   /**
    * @return true if the cursor has started to fetch items from database.
    */
+  // 游标开始从数据库获取数据这个就返回true
   boolean isOpen();
 
   /**
    *
    * @return true if the cursor is fully consumed and has returned all elements matching the query.
    */
+  // 判断所有元素是否已经获取完
   boolean isConsumed();
 
   /**
@@ -43,5 +48,6 @@ public interface Cursor<T> extends Closeable, Iterable<T> {
    *
    * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
    */
+  // 获取数据的索引，从0开始，如果没有数据就返回-1
   int getCurrentIndex();
 }

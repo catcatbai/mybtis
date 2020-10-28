@@ -43,6 +43,7 @@ import org.apache.ibatis.scripting.LanguageDriver;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Lang {
+  /*@baido 自己写个解析参数的类，然后包裹上 <script> 标签等 用法*/
   /**
    * Returns the {@link LanguageDriver} implementation type to use.
    *

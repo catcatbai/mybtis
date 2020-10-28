@@ -33,9 +33,9 @@ import org.apache.ibatis.session.RowBounds;
 
 public class ParamNameResolver {
 
-  public static final String GENERIC_NAME_PREFIX = "param";
+  public static final String GENERIC_NAME_PREFIX = "param"; // 一般参数名称的前缀
 
-  private final boolean useActualParamName;
+  private final boolean useActualParamName; // 是否使用实际的参数名称
 
   /**
    * <p>

@@ -19,5 +19,9 @@ package org.apache.ibatis.session;
  * @author Eduardo Macarron
  */
 public enum LocalCacheScope {
+  /*
+  * @baido SESSION 一个链接， STATEMENT 一个sql语句。 代表缓存的存在时长 Scope
+  *   参考：http://blog.itpub.net/35489/viewspace-611691/
+  * */
   SESSION,STATEMENT
 }

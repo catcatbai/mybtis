@@ -665,7 +665,9 @@ public class Configuration {
   }
 
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
+    /*@baido 判断为空用默认的*/
     executorType = executorType == null ? defaultExecutorType : executorType;
+    /*@baido 防止用户设置默认值为空*/
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
     if (ExecutorType.BATCH == executorType) {

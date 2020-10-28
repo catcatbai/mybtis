@@ -33,6 +33,7 @@ import org.apache.ibatis.mapping.FetchType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface One {
+  /*@baido @Target({}) 这个声明说明，该注解不能被用到任何地方。 但是 mybatis 是用它来传递值，比实体类方便。*/
   /**
    * Returns the columnPrefix.
    *

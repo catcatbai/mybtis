@@ -40,6 +40,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Param {
+  /*@baido 指定参数的名字，如果是map 指定了名字， 取值需要加上前缀。 例子： #{map.key}*/
   /**
    * Returns the parameter name.
    *

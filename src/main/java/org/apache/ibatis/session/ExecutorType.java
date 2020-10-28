@@ -19,5 +19,11 @@ package org.apache.ibatis.session;
  * @author Clinton Begin
  */
 public enum ExecutorType {
+  /*@baido
+  *   SIMPLE 每执行一次update或select，就开启一个Statement对象，用完立刻关闭Statement对象）
+  *   REUSE Map存储，sql为key，Stattemnt不关闭，
+  *   BATCH 批量处理
+  *   参考：https://www.cnblogs.com/wwct/p/12994222.html
+  * */
   SIMPLE, REUSE, BATCH
 }

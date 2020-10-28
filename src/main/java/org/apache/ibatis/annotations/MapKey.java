@@ -41,6 +41,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface MapKey {
+
+  /*@baido 可以返回 Map<key, Bean> 类型的结果*/
   /**
    * Returns the property name(or column name) for a key value of {@link java.util.Map}.
    *

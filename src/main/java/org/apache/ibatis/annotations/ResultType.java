@@ -45,6 +45,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultType {
+  /*@baido 没看懂？*/
   /**
    * Returns the return type.
    *

@@ -56,7 +56,7 @@ public class TypeParameterResolver {
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
-  public static Type resolveReturnType(Method method, Type srcType) {
+  public static Type resolveReturnType(Method method, Type srcType) { // Type 是 Java 语言中所有类型的公共父接口
     Type returnType = method.getGenericReturnType();
     Class<?> declaringClass = method.getDeclaringClass();
     return resolveType(returnType, srcType, declaringClass);
@@ -84,10 +84,15 @@ public class TypeParameterResolver {
   }
 
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
+    // Class、ParameterizedType、TypeVariable、WildcardType、GenericArrayType
+    // 参考：https://www.jianshu.com/p/cfa74c980b25
+    // TypeVariable 类型，泛型。 例如：List<T> a3;//返回T，TypeVariable类型
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
+      // List<ArrayList<String>> a2;//返回ArrayList<String>，ParameterizedType类型
     } else if (type instanceof ParameterizedType) {
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
+      // List<ArrayList<String>[]> a5;//返回ArrayList<String>[]，GenericArrayType 类型
     } else if (type instanceof GenericArrayType) {
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
     } else {
@@ -152,6 +157,7 @@ public class TypeParameterResolver {
     return result;
   }
 
+  // 解析 TypeVariable 类型的参数
   private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
     Type result;
     Class<?> clazz;
@@ -159,12 +165,17 @@ public class TypeParameterResolver {
       clazz = (Class<?>) srcType;
     } else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
+      // 返回最外层<>前面那个类型，即Map<K ,V>的Map。　
+      // getOwnerType()是内部类，获得所在父类的方法。
+      // getActualTypeArguments() 是获得 <> 内的类型数组的方法。例子： Map<String, String>, 返回 Type[]
       clazz = (Class<?>) parameterizedType.getRawType();
     } else {
+      // @baido 为啥 srcType 必须是 Class 或者 ParameterizedType ？
       throw new IllegalArgumentException("The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
     }
 
     if (clazz == declaringClass) {
+      // getBounds() 返回表示此类型变量上边界的 type 对象的数组。注意，如果未显式声明上边界，则上边界为 Object。
       Type[] bounds = typeVar.getBounds();
       if (bounds.length > 0) {
         return bounds[0];
@@ -172,6 +183,8 @@ public class TypeParameterResolver {
       return Object.class;
     }
 
+    // getSuperclass() 返回直接继承的父类（由于编译擦除，没有显示泛型参数）
+    // getGenericSuperclass() 返回直接继承的父类（包含泛型参数）
     Type superclass = clazz.getGenericSuperclass();
     result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);
     if (result != null) {
@@ -188,9 +201,12 @@ public class TypeParameterResolver {
     return Object.class;
   }
 
+  // 扫描父类参数类型
   private static Type scanSuperTypes(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass, Class<?> clazz, Type superclass) {
+    //
     if (superclass instanceof ParameterizedType) {
       ParameterizedType parentAsType = (ParameterizedType) superclass;
+      // 返回最外层<>前面那个类型，即Map<K ,V>的Map。　
       Class<?> parentAsClass = (Class<?>) parentAsType.getRawType();
       TypeVariable<?>[] parentTypeVars = parentAsClass.getTypeParameters();
       if (srcType instanceof ParameterizedType) {
@@ -213,6 +229,7 @@ public class TypeParameterResolver {
   }
 
   private static ParameterizedType translateParentTypeVars(ParameterizedType srcType, Class<?> srcClass, ParameterizedType parentType) {
+    // 获得<> 里边的类型列表，例如： Map<String, String> 返回 Type[].
     Type[] parentTypeArgs = parentType.getActualTypeArguments();
     Type[] srcTypeArgs = srcType.getActualTypeArguments();
     TypeVariable<?>[] srcTypeVars = srcClass.getTypeParameters();

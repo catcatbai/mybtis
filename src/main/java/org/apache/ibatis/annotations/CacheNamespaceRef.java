@@ -44,6 +44,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface CacheNamespaceRef {
 
+  /*
+  * @baido 命名空间的引用 */
   /**
    * Returns the namespace type to reference a cache (the namespace name become a FQCN of specified type).
    *

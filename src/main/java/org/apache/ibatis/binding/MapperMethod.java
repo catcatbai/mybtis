@@ -45,9 +45,10 @@ import org.apache.ibatis.session.SqlSession;
  * @author Kazuki Shimizu
  */
 public class MapperMethod {
+  /*@baido 方法的信息 sql信息、方法签名的信息*/
 
-  private final SqlCommand command;
-  private final MethodSignature method;
+  private final SqlCommand command; // sql 信息
+  private final MethodSignature method; // 方法签名的信息
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
     this.command = new SqlCommand(config, mapperInterface, method);
@@ -218,14 +219,15 @@ public class MapperMethod {
 
   public static class SqlCommand {
 
-    private final String name;
-    private final SqlCommandType type;
+    private final String name; // 名称
+    private final SqlCommandType type; // sql 语句的类型， （UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH）
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
+      // 如果没有 mappedStatement 判断是否有 @Flush 注解，如果有，认为 sql 类型是 FLUSH 类型，否则，抛出 异常。
       if (ms == null) {
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
@@ -235,8 +237,10 @@ public class MapperMethod {
               + mapperInterface.getName() + "." + methodName);
         }
       } else {
+        // sqlCommand 的 name 是 mappedStatement 的 id， type 是 mappedStatement 对应的类型。
         name = ms.getId();
         type = ms.getSqlCommandType();
+        // 如果 type 类型是 UNKNOWN 则抛出异常。
         if (type == SqlCommandType.UNKNOWN) {
           throw new BindingException("Unknown execution method for: " + name);
         }
@@ -253,13 +257,19 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
+      //  mapper 接口名 + 方法名，作为 mappedStatement 的主键
       String statementId = mapperInterface.getName() + "." + methodName;
+      // 如果configuration 包含 statementId 的 mappedStatement 则直接获取。
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
+        // @baido 为啥相等就返回 null？
+        // 因为是递归
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
       }
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
+        // declaringClass 符类 判断 superInterface 是否为类本身或者字类。
+        // superInterface 是不是 declaringClass 的子类或者子接口
         if (declaringClass.isAssignableFrom(superInterface)) {
           MappedStatement ms = resolveMappedStatement(superInterface, methodName,
               declaringClass, configuration);
@@ -272,23 +282,28 @@ public class MapperMethod {
     }
   }
 
+  // 方法签名
   public static class MethodSignature {
 
-    private final boolean returnsMany;
-    private final boolean returnsMap;
-    private final boolean returnsVoid;
-    private final boolean returnsCursor;
-    private final boolean returnsOptional;
-    private final Class<?> returnType;
-    private final String mapKey;
-    private final Integer resultHandlerIndex;
-    private final Integer rowBoundsIndex;
-    private final ParamNameResolver paramNameResolver;
+    private final boolean returnsMany; // 是否返回多条
+    private final boolean returnsMap; // 是否返回 Map
+    private final boolean returnsVoid; // 是否返回空
+    private final boolean returnsCursor; // 是否游标
+    private final boolean returnsOptional; // 是否可选择的
+    private final Class<?> returnType; // 返回结果类型
+    private final String mapKey; // 当返回多个结果的 Map 类型时，指定一个字段，作为 Map 的 key 值。
+    private final Integer resultHandlerIndex; // 结果处理函数的编号
+    private final Integer rowBoundsIndex; //
+    private final ParamNameResolver paramNameResolver; //
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
+      // 利用反射，获得返回值类型
       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
+      // @baido 先判断基础类型，有参数的集合类型，如果找不到。直接返回方法的返回值类型，为啥这样做？
+      // 基本类型，对象类型，void
       if (resolvedReturnType instanceof Class<?>) {
         this.returnType = (Class<?>) resolvedReturnType;
+        // 有参数类型。例子：List<String>、 Map<key, User>
       } else if (resolvedReturnType instanceof ParameterizedType) {
         this.returnType = (Class<?>) ((ParameterizedType) resolvedReturnType).getRawType();
       } else {

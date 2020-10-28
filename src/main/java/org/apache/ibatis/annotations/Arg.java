@@ -38,6 +38,9 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 @Repeatable(ConstructorArgs.class)
 public @interface Arg {
 
+  /*
+  * @baido sql参数，可以重复，相当于集合*/
+
   /**
    * Returns whether id column or not.
    *

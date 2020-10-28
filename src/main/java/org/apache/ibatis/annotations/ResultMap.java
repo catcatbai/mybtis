@@ -57,6 +57,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ResultMap {
+  /*@baido 用来指定使用 xml中的 resultMap， 不理解的是，竟然还需要结合xml？
+  *   可以用 @Results 来代替，但是 Results 不可以复用？*/
   /**
    * Returns result map names to use.
    *
